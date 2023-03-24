@@ -1,0 +1,36 @@
+{
+  "cloudrun_revision": {
+    "serviceAccount": "premedy@project.iam.gserviceaccount.com"
+  },
+  "pubsub": {
+    "serviceAccountEmail": "premedy@project.iam.gserviceaccount.com"
+  },
+  "cloudbuild": {
+    "serviceAccount": "projects/project/serviceAccounts/deploy-cloudrun-cicd@project.iam.gserviceaccount.com",
+    "logsBucket": "project_cloudbuild"
+  },
+  "cloudrun_container": {
+    "env": [
+      {
+        "name": "BUCKET_NAME",
+        "value": ""
+      },
+      {
+        "name": "BUCKET_PROJECT",
+        "value": ""
+      },
+      {
+        "name": "PREMEDY_LOG_LEVEL",
+        "value": "INFO"
+      },
+      {
+        "name": "SLACK_BOT_CHANNEL",
+        "value": ""
+      },
+      {
+        "name": "SLACK_BOT_TOKEN",
+        "value": ""
+      }
+    ]
+  }
+}
