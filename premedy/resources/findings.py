@@ -25,8 +25,11 @@ def parse_finding_result(message: str) -> ListFindingsResponse.ListFindingsResul
 
 def save_in_gcs_bucket(finding_result: ListFindingsResponse.ListFindingsResult):
     try:
-        bucket_name = os.environ.get("BUCKET_NAME")
-        bucket_project = os.environ.get("BUCKET_PROJECT")
+        bucket_name = os.environ.get("BUCKET_NAME", None)
+        bucket_project = os.environ.get("BUCKET_PROJECT", None)
+        if not bucket_name or not bucket_project:
+            return
+
         finding_id = get_finding_id(finding_result)
         client = storage.Client(project=bucket_project)
         bucket = client.get_bucket(bucket_name)
