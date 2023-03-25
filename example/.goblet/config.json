@@ -1,13 +1,13 @@
 {
   "cloudrun_revision": {
-    "serviceAccount": "premedy@project.iam.gserviceaccount.com"
+    "serviceAccount": "premedy@<project>.iam.gserviceaccount.com"
   },
   "pubsub": {
-    "serviceAccountEmail": "premedy@project.iam.gserviceaccount.com"
+    "serviceAccountEmail": "premedy@<project>.iam.gserviceaccount.com"
   },
   "cloudbuild": {
-    "serviceAccount": "projects/project/serviceAccounts/deploy-cloudrun-cicd@project.iam.gserviceaccount.com",
-    "logsBucket": "project_cloudbuild"
+    "serviceAccount": "projects/project/serviceAccounts/deploy-cloudrun-cicd@<project>.iam.gserviceaccount.com",
+    "logsBucket": "<project>_cloudbuild"
   },
   "cloudrun_container": {
     "env": [
