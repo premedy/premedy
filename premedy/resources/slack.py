@@ -24,7 +24,7 @@ def send_message(message: str):
     try:
         # Call the chat.postMessage method using the WebClient
         # The client passes the token you included in initialization
-        result = client.chat_postMessage(channel=channel_id, text=message)
+        client.chat_postMessage(channel=channel_id, text=message)
 
     except SlackApiError as e:
         print(f"Error: {e}")

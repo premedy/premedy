@@ -1,13 +1,13 @@
 import traceback
 
 from premedy import config
-from google.cloud.securitycenter_v1 import ListFindingsResponse
 import functools
 from google.cloud import asset_v1
 import re
 import logging
 from premedy.resources import slack
 
+from premedy.premedy_finding import PremedyFinding
 
 logger = logging.getLogger(__name__)
 logger.setLevel(config.LOG_LEVEL)
@@ -18,11 +18,15 @@ class RemediationBase:
     remediation_functions = {}
     _asset = None
 
-    def __init__(self, finding_result: ListFindingsResponse.ListFindingsResult):
-        self.finding_result = finding_result
+    def __init__(self, premedy_finding: PremedyFinding):
+        self.premedy_finding = premedy_finding
         self.logger = logger
         if self.category is None:
             raise Exception("missing category: set a category in the child instance")
+
+    @property
+    def finding_result(self):
+        return self.premedy_finding.finding_result
 
     @classmethod
     def remediation(cls, notify_success=False, notify_error=True):
@@ -165,6 +169,8 @@ class RemediationBase:
                         )
 
                     except Exception as e:
+                        logger.debug(e)
+                        logger.debug(traceback.format_exc())
                         return
 
                 return func(self)

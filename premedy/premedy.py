@@ -1,9 +1,9 @@
+from premedy.premedy_finding import PremedyFinding
 import logging
 from os import listdir
 from os.path import isfile, join
 
 from premedy import config
-from premedy.resources import findings
 
 logger = logging.getLogger(__name__)
 logger.setLevel(config.LOG_LEVEL)
@@ -53,14 +53,14 @@ class Premedy:
             self.remediation_classes.append(klass)
 
     def consume(self, message):
-        finding_result = findings.parse_finding_result(message=message)
-        findings.save_in_gcs_bucket(finding_result=finding_result)
-        self.remediate(finding_result=finding_result)
+        premedy_finding = PremedyFinding(message)
+        premedy_finding.save_in_gcs_bucket()
+        self.remediate(premedy_finding)
         return {}
 
-    def remediate(self, finding_result):
+    def remediate(self, premedy_finding: PremedyFinding):
         for remediation in self.remediation_classes:
-            instance = remediation(finding_result=finding_result)
+            instance = remediation(premedy_finding=premedy_finding)
             self.app.log.info(f" Check Remediation Class {instance.__class__}")
             if instance.should_take_action():
                 try:
