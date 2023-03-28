@@ -1,0 +1,91 @@
+{
+  "notificationConfigName": "organizations/619223044509/notificationConfigs/scc-to-premedy",
+  "finding": {
+    "name": "organizations/619223044509/sources/14988874625949332811/findings/e9d678a184a990c81e9330513746be7c",
+    "parent": "organizations/619223044509/sources/14988874625949332811",
+    "resourceName": "//storage.googleapis.com/artifacts.premedy.appspot.com",
+    "state": "ACTIVE",
+    "category": "FEATURE_DEMO",
+    "externalUri": "https://cloud.google.com/storage/docs/access-logs",
+    "sourceProperties": {
+      "Recommendation": "To set up logging for a bucket, complete the usage logs & storage logs guide at: https://cloud.google.com/storage/docs/access-logs",
+      "ExceptionInstructions": "Add the security mark \"allow_bucket_logging_disabled\" to the asset with a value of \"true\" to prevent this finding from being activated again.",
+      "Explanation": "To help investigate security issues and monitor storage consumption, enable usage logs and storage logs for your Cloud Storage buckets. Usage logs provide information for all of the requests made on a specified bucket, and the storage logs provide information about the storage consumption of that bucket.",
+      "ScannerName": "LOGGING_SCANNER",
+      "ResourcePath": [
+        "projects/premedy/",
+        "folders/150443121139/",
+        "folders/1798593619246/",
+        "organizations/619223044509/"
+      ],
+      "compliance_standards": {
+        "cis": [
+          {
+            "version": "1.0",
+            "ids": [
+              "5.3"
+            ]
+          }
+        ]
+      },
+      "ReactivationCount": 0.0
+    },
+    "securityMarks": {
+      "name": "organizations/619223044509/sources/14988874625949332811/findings/e9d678a184a990c81e9330513746be7c/securityMarks",
+      "marks": {
+        "owner": "infrastructure-eng"
+      }
+    },
+    "eventTime": "2022-11-12T01:31:25.534604Z",
+    "createTime": "2021-05-25T14:30:22.167Z",
+    "canonicalName": "projects/46539310027/sources/14988874625949332811/findings/e9d678a184a990c81e9330513746be7c",
+    "mute": "UNDEFINED",
+    "findingClass": "MISCONFIGURATION",
+    "contacts": {
+      "security": {
+        "contacts": [
+          {
+            "email": "contact@premedy.com"
+          }
+        ]
+      },
+      "technical": {
+        "contacts": [
+          {
+            "email": "contact@premedy.com"
+          }
+        ]
+      }
+    },
+    "compliances": [
+      {
+        "standard": "cis",
+        "version": "1.0",
+        "ids": [
+          "5.3"
+        ]
+      }
+    ],
+    "parentDisplayName": "Security Health Analytics",
+    "description": "To help investigate security issues and monitor storage consumption, enable usage logs and storage logs for your Cloud Storage buckets. Usage logs provide information for all of the requests made on a specified bucket, and the storage logs provide information about the storage consumption of that bucket."
+  },
+  "resource": {
+    "name": "//storage.googleapis.com/artifacts.premedy.appspot.com",
+    "project": "//cloudresourcemanager.googleapis.com/projects/46539310027",
+    "projectDisplayName": "premedy",
+    "parent": "//cloudresourcemanager.googleapis.com/projects/46539310027",
+    "parentDisplayName": "premedy",
+    "type": "google.cloud.storage.Bucket",
+    "folders": [
+      {
+        "resourceFolder": "//cloudresourcemanager.googleapis.com/folders/150443121139",
+        "resourceFolderDisplayName": "env-dev"
+      },
+      {
+        "resourceFolder": "//cloudresourcemanager.googleapis.com/folders/1798593619246",
+        "resourceFolderDisplayName": "active"
+      }
+    ],
+    "displayName": "artifacts.premedy.appspot.com"
+  }
+}

@@ -1,0 +1,1 @@
+-e git+https://github.com/mauriciowittenberg/premedy.git@v0.0.1#egg=premedy
