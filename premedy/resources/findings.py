@@ -44,6 +44,7 @@ def save_in_gcs_bucket(finding_result: ListFindingsResponse.ListFindingsResult):
     except Exception as e:
         logger.error("saving finding in GCS Bucket")
         logger.error(e)
+        traceback.print_exc()
         if logger.level == logging.DEBUG:
             traceback.print_exc()
 
