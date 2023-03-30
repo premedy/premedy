@@ -67,13 +67,12 @@ class RemediationBase:
                 if function["notify_success"]:
                     notify_success(class_name, function_name, response)
             except Exception as e:
-                if function["notify_error"]:
-                    notify_error(class_name, function_name, traceback.format_exc())
-
-                logger.error(f"executing: {function_name}")
-                logger.error(e, stack_info=True, exc_info=1)
+                logger.error(f"executing: {function_name}: {str(e)}")
                 logger.debug(traceback.fomrat_exc())
                 traceback.print_exc()
+
+                if function["notify_error"]:
+                    notify_error(class_name, function_name, traceback.format_exc())
 
     @property
     def project(self):
