@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import MagicMock
 
 from premedy.premedy import Premedy
-from premedy.tests.remediations.dummy_remediation import DummyRemediation
 
 
 class TestPremedy(unittest.TestCase):
@@ -13,7 +12,7 @@ class TestPremedy(unittest.TestCase):
 
         topic = "topic"
         project = "project"
-        path = "./premedy/tests/remediations"
+        path = "./premedy/tests/mocks/remediations"
 
         premedy = Premedy(app, topic, project, path)
 
