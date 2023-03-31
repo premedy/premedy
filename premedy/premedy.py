@@ -28,6 +28,7 @@ class Premedy:
     def load_remediation_classes(self):
         sys.path.append(self.path)
         remediation_classes = []
+
         for file in glob(f"{self.path}/*.py"):
             logger.debug(f"loading: {file}")
             with open(file, "r") as f:
