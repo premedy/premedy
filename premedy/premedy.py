@@ -30,6 +30,9 @@ class Premedy:
         remediation_classes = []
 
         for file in glob(f"{self.path}/*.py"):
+            if file.endswith("__init__.py"):
+                continue
+
             logger.debug(f"loading: {file}")
             with open(file, "r") as f:
                 line = ""
