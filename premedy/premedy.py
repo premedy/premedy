@@ -1,10 +1,12 @@
-import sys
-
-from premedy.resources import findings
-from glob import glob
-from pydoc import locate
 import logging
+import sys
+from glob import glob
+from os import listdir
+from os.path import isfile, join
+from pydoc import locate
+
 from premedy import config
+from premedy.resources import findings
 
 logger = logging.getLogger(__name__)
 logger.setLevel(config.LOG_LEVEL)
@@ -25,7 +27,36 @@ class Premedy:
             use_subscription=self.use_subscription,
         )(self.consume)
 
+    @staticmethod
+    def to_camel_case(snake_str):
+        components = snake_str.split("_")
+        return "".join(x.title() for x in components)
+
     def load_remediation_classes(self):
+        file_names = [f for f in listdir(self.path) if isfile(join(self.path, f))]
+
+        for file_name in file_names:
+            if file_name == "__init__.py":
+                continue
+
+            file_without_extension = file_name.split(".")[0]
+            klass_name = f"Remediate{self.to_camel_case(file_without_extension)}"
+
+            import_path = ".".join(self.path.replace("./", "").split("/"))
+
+            imported_module = __import__(f"{import_path}.{file_without_extension}")
+
+            module = imported_module
+            for sub_module in import_path.split(".")[1:]:
+                module = getattr(module, sub_module)
+
+            module = getattr(module, file_without_extension)
+
+            klass = getattr(module, klass_name)
+
+            self.remediation_classes.append(klass)
+
+    def load_remediation_classes_deprecated(self):
         sys.path.append(self.path)
         remediation_classes = []
 

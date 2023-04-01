@@ -20,5 +20,7 @@ class TestPremedy(unittest.TestCase):
         self.assertEqual(premedy.topic, "topic")
         self.assertEqual(premedy.project, "project")
         self.assertEqual(premedy.use_subscription, True)
-        self.assertEqual(premedy.remediation_classes[0].__name__, "DummyRemediation")
+        self.assertEqual(
+            premedy.remediation_classes[0].__name__, "RemediateDummyRemediation"
+        )
         self.assertEqual(premedy.consume, "consume")
