@@ -41,9 +41,8 @@ class Premedy:
 
             import_path = ".".join(self.path.replace("./", "").split("/"))
 
-            imported_module = __import__(f"{import_path}.{file_without_extension}")
+            module = __import__(f"{import_path}.{file_without_extension}")
 
-            module = imported_module
             for sub_module in import_path.split(".")[1:]:
                 module = getattr(module, sub_module)
 
