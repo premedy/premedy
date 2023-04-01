@@ -1,9 +1,6 @@
 import logging
-import sys
-from glob import glob
 from os import listdir
 from os.path import isfile, join
-from pydoc import locate
 
 from premedy import config
 from premedy.resources import findings
@@ -55,41 +52,6 @@ class Premedy:
             klass = getattr(module, klass_name)
 
             self.remediation_classes.append(klass)
-
-    def load_remediation_classes_deprecated(self):
-        sys.path.append(self.path)
-        remediation_classes = []
-
-        for file in glob(f"{self.path}/*.py"):
-            if file.endswith("__init__.py"):
-                continue
-
-            logger.debug(f"loading: {file}")
-            with open(file, "r") as f:
-                line = ""
-                while "class" not in line and "(RemediationBase)" not in line:
-                    line = f.readline()
-            class_name = (
-                line.strip()
-                .replace("(RemediationBase):", "")
-                .replace("class ", "")
-                .strip()
-            )
-            module_name = (
-                file.replace("./", "")
-                .replace(".py", "")
-                .replace("/", ".")
-                .split(".")[-1]
-            )
-            remediation_class = locate(f"{module_name}.{class_name}")
-            if not remediation_class:
-                logger.error(f"failed to load {file}")
-                continue
-
-            remediation_classes.append(remediation_class)
-            logger.debug(f"loaded: class {class_name} from {file}")
-
-        self.remediation_classes = remediation_classes
 
     def consume(self, message):
         finding_result = findings.parse_finding_result(message=message)
