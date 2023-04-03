@@ -68,8 +68,6 @@ class RemediationBase:
                     notify_success(class_name, function_name, response)
             except Exception as e:
                 logger.error(f"executing: {function_name}: {str(e)}")
-                logger.debug(traceback.fomrat_exc())
-                traceback.print_exc()
 
                 if function["notify_error"]:
                     notify_error(class_name, function_name, traceback.format_exc())
