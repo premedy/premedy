@@ -66,10 +66,11 @@ class RemediationBase:
                 response = func()
                 if function["notify_success"]:
                     notify_success(class_name, function_name, response)
-            except:
+            except Exception as e:
+                logger.error(f"executing: {function_name}: {str(e)}")
+
                 if function["notify_error"]:
                     notify_error(class_name, function_name, traceback.format_exc())
-                logger.error(f"executing: {function_name}")
 
     @property
     def project(self):

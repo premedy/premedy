@@ -17,10 +17,8 @@ def parse_finding_result(message: str) -> ListFindingsResponse.ListFindingsResul
             message, ignore_unknown_fields=True
         )
         return finding_result
-    except:
-        logger.error("parsing finding result from json")
-        if logger.level == logging.DEBUG:
-            traceback.print_exc()
+    except Exception as e:
+        logger.error("parsing finding result from json: " + str(e))
 
 
 def save_in_gcs_bucket(finding_result: ListFindingsResponse.ListFindingsResult):
@@ -41,10 +39,8 @@ def save_in_gcs_bucket(finding_result: ListFindingsResponse.ListFindingsResult):
             )
         )
         logger.info(f"store finding [{finding_id}] in GCS Bucket [{bucket_name}]")
-    except:
-        logger.error(" saving finding in GCS Bucket")
-        if logger.level == logging.DEBUG:
-            traceback.print_exc()
+    except Exception as e:
+        logger.error("saving finding in GCS Bucket: " + str(e))
 
 
 def get_finding_id(finding_result: ListFindingsResponse.ListFindingsResult) -> str:

@@ -1,10 +1,9 @@
-import sys
-
-from premedy.resources import findings
-from glob import glob
-from pydoc import locate
 import logging
+from os import listdir
+from os.path import isfile, join
+
 from premedy import config
+from premedy.resources import findings
 
 logger = logging.getLogger(__name__)
 logger.setLevel(config.LOG_LEVEL)
@@ -25,36 +24,33 @@ class Premedy:
             use_subscription=self.use_subscription,
         )(self.consume)
 
+    @staticmethod
+    def to_camel_case(snake_str):
+        components = snake_str.split("_")
+        return "".join(x.title() for x in components)
+
     def load_remediation_classes(self):
-        sys.path.append(self.path)
-        remediation_classes = []
-        for file in glob(f"{self.path}/*.py"):
-            logger.debug(f"loading: {file}")
-            with open(file, "r") as f:
-                line = ""
-                while "class" not in line and "(RemediationBase)" not in line:
-                    line = f.readline()
-            class_name = (
-                line.strip()
-                .replace("(RemediationBase):", "")
-                .replace("class ", "")
-                .strip()
-            )
-            module_name = (
-                file.replace("./", "")
-                .replace(".py", "")
-                .replace("/", ".")
-                .split(".")[-1]
-            )
-            remediation_class = locate(f"{module_name}.{class_name}")
-            if not remediation_class:
-                logger.error(f"failed to load {file}")
+        file_names = [f for f in listdir(self.path) if isfile(join(self.path, f))]
+
+        for file_name in file_names:
+            if file_name == "__init__.py":
                 continue
 
-            remediation_classes.append(remediation_class)
-            logger.debug(f"loaded: class {class_name} from {file}")
+            file_without_extension = file_name.split(".")[0]
+            klass_name = f"Remediate{self.to_camel_case(file_without_extension)}"
 
-        self.remediation_classes = remediation_classes
+            import_path = ".".join(self.path.replace("./", "").split("/"))
+
+            module = __import__(f"{import_path}.{file_without_extension}")
+
+            for sub_module in import_path.split(".")[1:]:
+                module = getattr(module, sub_module)
+
+            module = getattr(module, file_without_extension)
+
+            klass = getattr(module, klass_name)
+
+            self.remediation_classes.append(klass)
 
     def consume(self, message):
         finding_result = findings.parse_finding_result(message=message)
