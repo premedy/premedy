@@ -22,7 +22,7 @@ class Premedy:
             topic=self.topic,
             project=self.project,
             use_subscription=self.use_subscription,
-        )(self.consume)
+        )(self.consume_handler)
 
     @staticmethod
     def to_camel_case(snake_str):
@@ -52,7 +52,7 @@ class Premedy:
 
             self.remediation_classes.append(klass)
 
-    def consume(self, message):
+    def consume_handler(self, message):
         finding_result = findings.parse_finding_result(message=message)
         findings.save_in_gcs_bucket(finding_result=finding_result)
         self.remediate(finding_result=finding_result)
