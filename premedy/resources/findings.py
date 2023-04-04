@@ -21,17 +21,26 @@ def parse_finding_result(message: str) -> ListFindingsResponse.ListFindingsResul
         logger.error("parsing finding result from json: " + str(e))
 
 
-def save_in_gcs_bucket(finding_result: ListFindingsResponse.ListFindingsResult):
+def default_store_path_handler(finding_result):
+    return f"findings/categories/{finding_result.finding.category}/{get_finding_id(finding_result)}"
+
+
+def save_in_gcs_bucket(
+    finding_result: ListFindingsResponse.ListFindingsResult,
+    store_path_handler=default_store_path_handler,
+):
     try:
+        store_path = store_path_handler(finding_result)
         bucket_name = os.environ.get("BUCKET_NAME", None)
         bucket_project = os.environ.get("BUCKET_PROJECT", None)
-        if not bucket_name or not bucket_project:
+
+        if not (store_path and bucket_name and bucket_project):
             return
 
         finding_id = get_finding_id(finding_result)
         client = storage.Client(project=bucket_project)
         bucket = client.get_bucket(bucket_name)
-        store_path = "/".join(finding_result.finding.name.split("/")[-4:])
+
         blob = bucket.blob(store_path)
         blob.upload_from_string(
             ListFindingsResponse.ListFindingsResult.to_json(
