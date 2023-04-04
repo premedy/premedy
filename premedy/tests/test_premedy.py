@@ -1,7 +1,12 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from premedy.premedy import Premedy
+from premedy.premedy import (
+    Premedy,
+    path_handler_action_taken,
+    path_handler_error_while_taking_action,
+    path_handler_no_remediation_for_finding,
+)
 
 
 class TestPremedy(unittest.TestCase):
@@ -63,7 +68,9 @@ class TestPremedy(unittest.TestCase):
 
         finding_result = "finding_result"
         premedy.remediate(finding_result)
-        save_in_gcs_bucket.assert_called_once_with(finding_result=finding_result)
+        save_in_gcs_bucket.assert_called_once_with(
+            finding_result=finding_result, store_path_handler=path_handler_action_taken
+        )
 
     @patch("premedy.premedy.findings.save_in_gcs_bucket")
     def test_remediate_dont_take_action(self, save_in_gcs_bucket):
@@ -87,7 +94,10 @@ class TestPremedy(unittest.TestCase):
 
         finding_result = "finding_result"
         premedy.remediate(finding_result)
-        save_in_gcs_bucket.assert_called_once_with(finding_result=finding_result)
+        save_in_gcs_bucket.assert_called_once_with(
+            finding_result=finding_result,
+            store_path_handler=path_handler_no_remediation_for_finding,
+        )
 
     @patch("premedy.premedy.findings.save_in_gcs_bucket")
     def test_remediate_dont_take_action_because_of_error(self, save_in_gcs_bucket):
@@ -113,4 +123,7 @@ class TestPremedy(unittest.TestCase):
             instance_take_action.remediate()
 
         premedy.remediate("finding")
-        save_in_gcs_bucket.assert_called_once_with(finding_result="finding")
+        save_in_gcs_bucket.assert_called_once_with(
+            finding_result="finding",
+            store_path_handler=path_handler_error_while_taking_action,
+        )

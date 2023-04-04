@@ -59,6 +59,8 @@ class Premedy:
         return {}
 
     def remediate(self, finding_result):
+        saved_finding = False
+
         for remediation in self.remediation_classes:
             instance = remediation(finding_result=finding_result)
             self.app.log.info(f" Check Remediation Class {instance.__class__}")
@@ -72,9 +74,36 @@ class Premedy:
                     self.app.log.info(
                         f" Action Response Remediation Class {instance.__class__}: {response}"
                     )
-                    findings.save_in_gcs_bucket(finding_result=finding_result)
+                    findings.save_in_gcs_bucket(
+                        finding_result=finding_result,
+                        store_path_handler=path_handler_action_taken,
+                    )
+                    saved_finding = True
                 except:
                     self.app.log.error(f" Could not remediate: {instance.__class__}")
-                    findings.save_in_gcs_bucket(finding_result=finding_result)
+                    findings.save_in_gcs_bucket(
+                        finding_result=finding_result,
+                        store_path_handler=path_handler_error_while_taking_action,
+                    )
+                    saved_finding = True
             else:
-                findings.save_in_gcs_bucket(finding_result=finding_result)
+                if not saved_finding:
+                    findings.save_in_gcs_bucket(
+                        finding_result=finding_result,
+                        store_path_handler=path_handler_no_remediation_for_finding,
+                    )
+
+
+def path_handler_action_taken(finding_result):
+    default_path = findings.default_store_path_handler(finding_result)
+    return f"action_taken/f{default_path}"
+
+
+def path_handler_error_while_taking_action(finding_result):
+    default_path = findings.default_store_path_handler(finding_result)
+    return f"error_while_taking_action/f{default_path}"
+
+
+def path_handler_no_remediation_for_finding(finding_result):
+    default_path = findings.default_store_path_handler(finding_result)
+    return f"no_remediation_for_finding/f{default_path}"
