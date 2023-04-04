@@ -54,7 +54,7 @@ class Premedy:
 
     def consume_handler(self, message):
         finding_result = findings.parse_finding_result(message=message)
-        findings.save_in_gcs_bucket(finding_result=finding_result)
+        # findings.save_in_gcs_bucket(finding_result=finding_result)
         self.remediate(finding_result=finding_result)
         return {}
 
@@ -62,6 +62,7 @@ class Premedy:
         for remediation in self.remediation_classes:
             instance = remediation(finding_result=finding_result)
             self.app.log.info(f" Check Remediation Class {instance.__class__}")
+
             if instance.should_take_action():
                 try:
                     self.app.log.info(
@@ -71,5 +72,9 @@ class Premedy:
                     self.app.log.info(
                         f" Action Response Remediation Class {instance.__class__}: {response}"
                     )
+                    findings.save_in_gcs_bucket(finding_result=finding_result)
                 except:
                     self.app.log.error(f" Could not remediate: {instance.__class__}")
+                    findings.save_in_gcs_bucket(finding_result=finding_result)
+            else:
+                findings.save_in_gcs_bucket(finding_result=finding_result)
