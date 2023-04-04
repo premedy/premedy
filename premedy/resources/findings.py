@@ -1,4 +1,3 @@
-import traceback
 from operator import methodcaller
 from google.cloud import securitycenter
 from google.cloud.securitycenter_v1 import ListFindingsResponse
