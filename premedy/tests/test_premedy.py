@@ -127,3 +127,32 @@ class TestPremedy(unittest.TestCase):
             finding_result="finding",
             store_path_handler=path_handler_error_while_taking_action,
         )
+
+    @patch("premedy.premedy.findings.save_in_gcs_bucket")
+    def test_remediate_saves_finding_when_no_remediation_classes(
+        self, save_in_gcs_bucket
+    ):
+        app = MagicMock()
+        topic = "topic"
+        project = "project"
+        path = "./premedy/tests/mocks/remediations"
+        premedy = Premedy(app, topic, project, path)
+
+        instance_take_action = MagicMock()
+        instance_take_action.should_take_action.return_value = True
+        instance_take_action.remediate = MagicMock()
+        instance_take_action.remediate.side_effect = Exception("oops!")
+
+        premedy.remediation_classes = []
+
+        # asserts
+        self.assertEqual(instance_take_action.should_take_action(), True)
+
+        with self.assertRaises(Exception):
+            instance_take_action.remediate()
+
+        premedy.remediate("finding")
+        save_in_gcs_bucket.assert_called_once_with(
+            finding_result="finding",
+            store_path_handler=path_handler_no_remediation_for_finding,
+        )
