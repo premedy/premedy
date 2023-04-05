@@ -95,14 +95,14 @@ class Premedy:
 
 def path_handler_action_taken(finding_result):
     default_path = findings.default_store_path_handler(finding_result)
-    return f"action_taken/f{default_path}"
+    return f"action_taken/{default_path}"
 
 
 def path_handler_error_while_taking_action(finding_result):
     default_path = findings.default_store_path_handler(finding_result)
-    return f"error_while_taking_action/f{default_path}"
+    return f"error_while_taking_action/{default_path}"
 
 
 def path_handler_no_remediation_for_finding(finding_result):
     default_path = findings.default_store_path_handler(finding_result)
-    return f"no_remediation_for_finding/f{default_path}"
+    return f"no_remediation_for_finding/{default_path}"
