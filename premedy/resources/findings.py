@@ -36,7 +36,6 @@ def save_in_gcs_bucket(
         if not (store_path and bucket_name and bucket_project):
             return
 
-        finding_id = get_finding_id(finding_result)
         client = storage.Client(project=bucket_project)
         bucket = client.get_bucket(bucket_name)
 
@@ -46,7 +45,7 @@ def save_in_gcs_bucket(
                 instance=finding_result, indent=2
             )
         )
-        logger.info(f"store finding [{finding_id}] in GCS Bucket [{bucket_name}]")
+        logger.info(f"store finding [{store_path}] in GCS Bucket [{bucket_name}]")
     except Exception as e:
         logger.error("saving finding in GCS Bucket: " + str(e))
 
