@@ -85,12 +85,12 @@ class Premedy:
                         store_path_handler=path_handler_error_while_taking_action,
                     )
                     saved_finding = True
-            else:
-                if not saved_finding:
-                    findings.save_in_gcs_bucket(
-                        finding_result=finding_result,
-                        store_path_handler=path_handler_no_remediation_for_finding,
-                    )
+
+        if not saved_finding:
+            findings.save_in_gcs_bucket(
+                finding_result=finding_result,
+                store_path_handler=path_handler_no_remediation_for_finding,
+            )
 
 
 def path_handler_action_taken(finding_result):
