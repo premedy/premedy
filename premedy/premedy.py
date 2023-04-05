@@ -54,7 +54,6 @@ class Premedy:
 
     def consume_handler(self, message):
         finding_result = findings.parse_finding_result(message=message)
-        # findings.save_in_gcs_bucket(finding_result=finding_result)
         self.remediate(finding_result=finding_result)
         return {}
 
